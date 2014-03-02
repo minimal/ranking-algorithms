@@ -1,6 +1,7 @@
 (ns ranking-algorithms.core
   (:require [ranking-algorithms.ranking :as ranking])
-  (:require [ranking-algorithms.glicko :as glicko]))
+  (:require [ranking-algorithms.glicko :as glicko])
+  (:require [clojure.pprint :as pprint]))
   ;; (:require [ranking-algorithms.parse :as parse])
   ;; (:require [ranking-algorithms.uefa :as uefa])
 
@@ -121,7 +122,7 @@
 
 (defn print-top-glicko-teams
   [number all-matches base-rankings]
-  (clojure.pprint/print-table
+  (pprint/print-table
    [:rank :team :ranking :rd :round :wins :draw :loses]
    (filter #(not ( nil? (:round %)))
            (map-indexed
@@ -131,7 +132,7 @@
 (defn print-top-teams-without-round
   ([number all-matches] (print-top-teams-without-round number all-matches {}))
   ([number all-matches base-rankings]
-      (clojure.pprint/print-table
+      (pprint/print-table
        [:rank :team :ranking :wins :draw :loses]
        (map-indexed
         (partial format-for-printing all-matches)
@@ -140,7 +141,7 @@
 (defn print-top-teams
   ([number all-matches] (print-top-teams number all-matches {}))
   ([number all-matches base-rankings]
-      (clojure.pprint/print-table
+      (pprint/print-table
        [:rank :team :ranking :round :wins :draw :loses]
        (map-indexed
         (partial format-for-printing all-matches)
@@ -181,4 +182,3 @@
                       details
                       (match-record (show-matches team all-matches))
                       (performance (show-matches team all-matches))))))
-
