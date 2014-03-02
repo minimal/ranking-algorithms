@@ -1,6 +1,6 @@
 (ns ranking-algorithms.core
   (:require [ranking-algorithms.ranking :as ranking])
-  (:require [ranking-algorithms.glicko :as glicko])
+  (:require [ranking-algorithms.glicko :as glicko]))
   ;; (:require [ranking-algorithms.parse :as parse])
   ;; (:require [ranking-algorithms.uefa :as uefa])
 
