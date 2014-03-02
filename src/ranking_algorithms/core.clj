@@ -46,8 +46,8 @@
 
 (defn show-opposition [team match]
   (if (= team (:home match))
-    {:opposition (:away match) :for (:home_score match) :against (:away_score match) :round (:round match)}
-    {:opposition (:home match) :for (:away_score match) :against (:home_score match) :round (:round match)}))
+    {:opposition (:away match) :for (:home_score match) :against (:away_score match) :round (:round match) :date (:date match)}
+    {:opposition (:home match) :for (:away_score match) :against (:home_score match) :round (:round match) :date (:date match)}))
 
 (defn show-matches [team matches]
   (->> matches
