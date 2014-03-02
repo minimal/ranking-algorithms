@@ -1,8 +1,13 @@
 (ns ranking-algorithms.core
   (:require [ranking-algorithms.ranking :as ranking])
   (:require [ranking-algorithms.glicko :as glicko])
-  (:require [ranking-algorithms.parse :as parse])
-  (:require [ranking-algorithms.uefa :as uefa]))
+  ;; (:require [ranking-algorithms.parse :as parse])
+  ;; (:require [ranking-algorithms.uefa :as uefa])
+
+(defn extract-teams [matches]
+  (->> matches
+       (mapcat (fn [match] [(:home match) (:away match)]))
+       set))
 
 (defn merge-rankings [base-rankings initial-rankings]
   (merge initial-rankings
@@ -17,7 +22,7 @@
      (let [teams-with-rankings
            (merge-rankings
             base-rankings
-            (ranking/initial-rankings (uefa/extract-teams matches)))]       
+            (ranking/initial-rankings (extract-teams matches)))]
        (map
         (fn [[team details]]
           [team (read-string (format "%.2f" (:points details)))])
@@ -55,7 +60,7 @@
 
 (defn process-team
   [team ranking matches]
-  (let [rankings  (glicko/initial-rankings (uefa/extract-teams matches))
+  (let [rankings  (glicko/initial-rankings (extract-teams matches))
         opponents (map glicko/as-glicko-opposition (show-opponents team matches rankings))]
     (-> ranking
         (update-in [:points] #(glicko/ranking-after-round
@@ -75,10 +80,10 @@
   ([matches] (rank-glicko-teams matches {}))
   ([matches base-rankings]
      (let [teams-with-rankings
-           (merge 
-                   (glicko/initial-rankings (uefa/extract-teams matches)) base-rankings)
+           (merge
+                   (glicko/initial-rankings (extract-teams matches)) base-rankings)
            teams
-           (uefa/extract-teams matches)]
+           (extract-teams matches)]
        (map apply-rounding
             (sort-by #(:points (val %))
                      >
@@ -93,8 +98,8 @@
   (apply array-map
          (flatten (map (fn [[team points]] [team {:points points}]) teams))))
 
-(def base
-  (base-ratings (rank-teams (uefa/every-match))))
+(comment (def base
+           (base-ratings (rank-teams (uefa/every-match)))))
 
 (defn performance [opponents]
   (let [last-match (last opponents)]
@@ -157,14 +162,14 @@
         base-rankings
         base-rankings))
 
-
-(defn glicko-after
-  ([year]
-     (glicko-after year (glicko/initial-rankings (uefa/extract-teams (uefa/every-match)))))
-  ([year base-rankings]
-     (let [periods-missed (get uefa/periods-missed-per-season year)
-           matches (uefa/all-matches year)]
-       (glickoify matches (updated-rds base-rankings periods-missed)))))
+(comment
+  (defn glicko-after
+    ([year]
+       (glicko-after year (glicko/initial-rankings (extract-teams (uefa/every-match)))))
+    ([year base-rankings]
+       (let [periods-missed (get uefa/periods-missed-per-season year)
+             matches (uefa/all-matches year)]
+         (glickoify matches (updated-rds base-rankings periods-missed))))))
 
 
 (comment (doseq [match (show-matches "Manchester United" all-matches)]
