@@ -62,7 +62,7 @@
        ))
 
 (def all-matches
-  (concat (matches "/Users/markhneedham/code/ranking-algorithms/data/ec200203det.html")
+  (concat [] #_(matches "/Users/markhneedham/code/ranking-algorithms/data/ec200203det.html")
           [{:home "AC Milan", :away "Juventus Turijn", :home_score 0, :away_score 0 :round "Final"}]))
 
 (def rounds

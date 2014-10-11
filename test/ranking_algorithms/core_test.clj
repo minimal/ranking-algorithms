@@ -2,7 +2,7 @@
   (:use clojure.test
         ranking-algorithms.core))
 
-(deftest pairs-of-values
+#_(deftest pairs-of-values
    (let [args ["--server" "localhost"
                "--port" "8080"
                "--environment" "production"]]
